@@ -1,0 +1,16 @@
+name: backend-driving-school
+dependencies:
+  - python=3.11.3
+  - pip=23.1.2
+  - pip:
+      - django==4.2.2
+      - djangorestframework==3.14.0
+      - djangorestframework-simplejwt==5.2.2
+      - drf-yasg==1.21.6
+      - pillow==9.5.0
+      - django-dotenv==1.4.2                  # Load env variables to a Django project on project start
+      - whitenoise==6.5.0                     # Serve static files for production
+      - django-storages==1.13.2               # Used to connect to an external media files storage
+      - boto3==1.26.165                       # AWS SDK - allows application to interact with services like DO or AWS S3
+      - psycopg2-binary==2.9.6                # Adapter for Python & PostgreSQL
+      - gunicorn==20.1.0                      # Production grade Python Web Server
