@@ -36,6 +36,11 @@ ALLOWED_HOSTS = ['backend-driving-school-99d5f092ee9a.herokuapp.com']
 if SERVER_TYPE !='production':
     ALLOWED_HOSTS += ['127.0.0.1']
 
+CORS_ALLOWED_ORIGINS = []  # Add Host of Frontend Production here --> Example: https://livecoding-spa-heroku.herokuapp.com/
+
+if SERVER_TYPE != 'production':
+    CORS_ALLOWED_ORIGINS += ['http://localhost:3000']
+
 
 # Application definition
 
@@ -52,10 +57,12 @@ INSTALLED_APPS = [
     # Third party Apps
     'rest_framework',
     'drf_yasg',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

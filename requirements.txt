@@ -3,6 +3,7 @@ boto3==1.26.165
 botocore==1.29.165
 dj-database-url==2.0.0
 Django==4.2.2
+django-cors-headers==4.1.0
 django-dotenv==1.4.2
 django-storages==1.13.2
 djangorestframework==3.14.0
