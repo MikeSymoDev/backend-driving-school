@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,7 +31,10 @@ print(DEBUG)
 
 SERVER_TYPE = os.environ.get('SERVER_TYPE', 'development')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['backend-driving-school-99d5f092ee9a.herokuapp.com']
+
+if SERVER_TYPE !='production':
+    ALLOWED_HOSTS += ['127.0.0.1']
 
 
 # Application definition
@@ -94,6 +99,9 @@ DATABASES = {
         "PASSWORD": os.environ.get('POSTGRES_PASSWORD'),
     }
 }
+
+if SERVER_TYPE == 'production':
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 
 # Password validation

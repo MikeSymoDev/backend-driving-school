@@ -14,3 +14,4 @@ dependencies:
       - boto3==1.26.165                       # AWS SDK - allows application to interact with services like DO or AWS S3
       - psycopg2-binary==2.9.6                # Adapter for Python & PostgreSQL
       - gunicorn==20.1.0                      # Production grade Python Web Server
+      - dj-database-url==2.0.0                # Used to connect to Postgres using a DJ_DATABASE_URL provided by Heroku
