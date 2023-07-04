@@ -42,7 +42,8 @@ class UserProfile(models.Model):
     # vehicle FK on Vehicle Table
     # appointment_of_instructor FK on Appointment Table
     instructor_license = models.CharField(max_length=100, blank=True, null=True)
-    drivingSchool = models.ForeignKey(to=DrivingSchool, on_delete=models.CASCADE, related_name="instructor_profile", limit_choices_to={'instructor_profile': None})
+    driving_school = models.ForeignKey(to=DrivingSchool, on_delete=models.CASCADE, related_name="instructor_profile",
+                                      limit_choices_to={'instructor_profile': None}, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     has_learner_permit = models.BooleanField(default=False, blank=True, null=True)
@@ -61,6 +62,9 @@ class UserProfile(models.Model):
 
         if self.type == 'S' and self.has_learner_permit is False:
             raise ValidationError({'has_learner_permit': 'Learner permit is required for students'})
+
+        if self.type == 'I' and not self.drivingSchool:
+            raise ValidationError({'driving_school': 'Driving School is required for instructors.'})
 
     def __str__(self):
         return f'{self.email}({self.type})'
