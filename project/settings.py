@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 
     # own apps
     'user',
+    'userProfile',
     'vehicle',
     'vehicleImage',
     'appointment',
