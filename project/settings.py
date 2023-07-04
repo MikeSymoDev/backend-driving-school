@@ -53,6 +53,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # own apps
+    'user',
+    'userProfile',
+    'vehicle',
+    'vehicleImage',
+    'appointment',
+    'availableTime',
+    'class_package',
+
+
 
     # Third party Apps
     'rest_framework',
