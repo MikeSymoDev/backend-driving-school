@@ -15,4 +15,4 @@ class DrivingSchool(models.Model):
     address = models.CharField(max_length=254, default='')
     postal_code = models.CharField(max_length=8, null=True)
     location_city = models.CharField(max_length=254, default='')
-    country = models.CharField(max_length=1, choices=COUNTRY, null=True)
+    country = models.CharField(max_length=2, choices=COUNTRY, null=True)
