@@ -4,10 +4,12 @@ from django.db import models
 from drivingSchool.models import DrivingSchool
 from user.models import User
 
+
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     print(instance)
     return f'{instance.id}/{filename}'
+
 
 # Create your models here.
 class UserProfile(models.Model):
@@ -38,8 +40,7 @@ class UserProfile(models.Model):
     location_city = models.CharField(max_length=254, default='')
     country = models.CharField(max_length=1, choices=COUNTRY, null=True)
     about = models.CharField(max_length=500, blank=True, null=True)
-    profile_image = models.ImageField(blank=True, null=True)
-    # vehicle FK on Vehicle Table
+    profile_image = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
     # appointment_of_instructor FK on Appointment Table
     instructor_license = models.CharField(max_length=100, blank=True, null=True)
     driving_school = models.ForeignKey(to=DrivingSchool, on_delete=models.CASCADE, related_name="instructor_profile",
