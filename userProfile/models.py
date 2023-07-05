@@ -38,7 +38,7 @@ class UserProfile(models.Model):
     address = models.CharField(max_length=254, default='')
     postal_code = models.CharField(max_length=8, null=True)
     location_city = models.CharField(max_length=254, default='')
-    country = models.CharField(max_length=1, choices=COUNTRY, null=True)
+    country = models.CharField(max_length=2, choices=COUNTRY, null=True)
     about = models.CharField(max_length=500, blank=True, null=True)
     profile_image = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
     # appointment_of_instructor FK on Appointment Table
@@ -64,7 +64,7 @@ class UserProfile(models.Model):
         if self.type == 'S' and self.has_learner_permit is False:
             raise ValidationError({'has_learner_permit': 'Learner permit is required for students'})
 
-        if self.type == 'I' and not self.drivingSchool:
+        if self.type == 'I' and not self.driving_school:
             raise ValidationError({'driving_school': 'Driving School is required for instructors.'})
 
     def __str__(self):

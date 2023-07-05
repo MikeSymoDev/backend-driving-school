@@ -6,7 +6,7 @@ from django.db import models
 
 class User(AbstractUser):
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
     email = models.EmailField(unique=True)
 
     def __str__(self):
