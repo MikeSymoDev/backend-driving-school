@@ -26,3 +26,6 @@ class Vehicle(models.Model):
     fuel_type = models.CharField(max_length=1, choices=FUEL_TYPE, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.id}: {self.make} - {self.model}(Instructor: {self.driving_instructor.email})'
