@@ -68,5 +68,7 @@ class UserProfile(models.Model):
             raise ValidationError({'driving_school': 'Driving School is required for instructors.'})
 
     def __str__(self):
-        return f'{self.email}({self.type})'
+        user_type = dict(self.TYPE)[self.type]
+        return f'{self.email} ({user_type})'
+
 
