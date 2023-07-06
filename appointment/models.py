@@ -36,3 +36,6 @@ class Appointment(models.Model):
 
         if self.student and self.student.type != 'S':
             raise ValidationError({'student': 'Only students can be assigned to the student field.'})
+
+    def __str__(self):
+        return f'{self.id}: {self.title}({self.date}: {self.start_slot})'

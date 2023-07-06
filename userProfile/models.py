@@ -8,7 +8,10 @@ from user.models import User
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     print(instance)
-    return f'{instance.id}/{filename}'
+    if instance.type == 'I':
+        return f'instructor/{instance.email}/{filename}'
+    else:
+        return f'student/{instance.email}/{filename}'
 
 
 # Create your models here.
@@ -41,15 +44,12 @@ class UserProfile(models.Model):
     country = models.CharField(max_length=2, choices=COUNTRY, null=True)
     about = models.CharField(max_length=500, blank=True, null=True)
     profile_image = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
-    # appointment_of_instructor FK on Appointment Table
     instructor_license = models.CharField(max_length=100, blank=True, null=True)
-    driving_school = models.ForeignKey(to=DrivingSchool, on_delete=models.CASCADE, related_name="instructor_profile",
-                                      limit_choices_to={'instructor_profile': None}, blank=True, null=True)
+    driving_school = models.ForeignKey(to=DrivingSchool, on_delete=models.CASCADE, related_name="instructor_profile", blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     has_learner_permit = models.BooleanField(default=False, blank=True, null=True)
     phone = models.CharField(max_length=60, default='')
-    # appointment_of_student --> FK on Appointment Table
     # available Time --> will be done later
     # packages bought --> will be done later
 
