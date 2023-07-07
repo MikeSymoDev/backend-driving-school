@@ -37,7 +37,7 @@ ALLOWED_HOSTS = ['backend-driving-school-99d5f092ee9a.herokuapp.com']
 if SERVER_TYPE !='production':
     ALLOWED_HOSTS += ['127.0.0.1']
 
-CORS_ALLOWED_ORIGINS = []  # Add Host of Frontend Production here --> Example: https://livecoding-spa-heroku.herokuapp.com/
+CORS_ALLOWED_ORIGINS = ['https://fe-driving-school-83b8d520b244.herokuapp.com']
 
 if SERVER_TYPE != 'production':
     CORS_ALLOWED_ORIGINS += ['http://localhost:3000']
