@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, GenericAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -54,14 +53,15 @@ class RetrieveUpdateDeleteUserProfile(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return UserProfile.objects.filter(user=self.request.user)
+
     def api_response(self, message, status_code=status.HTTP_200_OK):
         return Response({"message": message}, status=status_code)
 
     def destroy(self, request, *args, **kwargs):
-        userProfile = self.get_object()
+        user_profile = self.get_object()
 
         # Delete the related DjangoUser instance
-        django_user = userProfile.userprofile
+        django_user = user_profile.userprofile
         django_user.delete()
 
         # Delete the related RegistrationProfile instance if it exists
@@ -70,8 +70,6 @@ class RetrieveUpdateDeleteUserProfile(RetrieveUpdateDestroyAPIView):
             registration_profile.delete()
 
         # Delete the UserProfile instance
-        self.perform_destroy(userProfile)
+        self.perform_destroy(user_profile)
 
         return self.api_response("Profile deleted successfully", status.HTTP_204_NO_CONTENT)
-
-

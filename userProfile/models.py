@@ -55,10 +55,6 @@ class UserProfile(models.Model):
     # available Time --> will be done later
     # packages bought --> will be done later
 
-
-
-
-
     def clean(self):
         if self.type == 'I' and not self.instructor_license:
             raise ValidationError({'instructor_license': 'Instructor license is required for instructors.'})
@@ -72,6 +68,7 @@ class UserProfile(models.Model):
     def __str__(self):
         # user_type = dict(self.TYPE)[self.type]
         return f'{self.email}'
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
