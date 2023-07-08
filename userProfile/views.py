@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, GenericAPIView, ListAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -69,4 +69,12 @@ class RetrieveUpdateDeleteUserProfile(RetrieveUpdateDestroyAPIView):
 class InstructorListView(ListAPIView):
     queryset = UserProfile.objects.filter(type='I')
     serializer_class = UserProfileSerializer
+    permission_classes = []
+
+
+# Get certain Instructor
+class InstructorDetailView(RetrieveAPIView):
+    queryset = UserProfile.objects.filter(type='I')
+    serializer_class = UserProfileSerializer
+    lookup_url_kwarg = 'userProfile_id'
     permission_classes = []
