@@ -8,3 +8,4 @@ from drivingSchool.serializers import DrivingSchoolSerializer
 class ListCreateDrivingSchoolView(ListCreateAPIView):
     queryset = DrivingSchool.objects.all()
     serializer_class = DrivingSchoolSerializer
+    permission_classes = []
