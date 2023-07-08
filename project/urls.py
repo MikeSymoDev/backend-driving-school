@@ -30,7 +30,7 @@ urlpatterns = [
     path('backend/api/signup/', include('user.urls')),
     path('backend/api/user/', include('userProfile.urls')),
     path('backend/api/appointment/', include('appointment.urls')),
-    path('backend/api/drivingschools/', include('drivingSchool.urls')),
+    path('backend/api/drivingschool/', include('drivingSchool.urls')),
 ]
 
 if settings.DEBUG:
