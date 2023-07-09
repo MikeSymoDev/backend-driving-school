@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from user.models import User
 from userProfile.models import UserProfile
 from userProfile.serializers import UserProfileSerializer
+from vehicle.serializers import VehicleSerializer
 
 
 # Create your views here.
@@ -78,3 +79,15 @@ class InstructorDetailView(RetrieveAPIView):
     serializer_class = UserProfileSerializer
     lookup_url_kwarg = 'userProfile_id'
     permission_classes = []
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        data = serializer.data
+
+        # Retrieve the associated vehicles
+        vehicles = instance.vehicle.all()
+        vehicle_serializer = VehicleSerializer(vehicles, many=True)
+        data['vehicles'] = vehicle_serializer.data
+
+        return Response(data)
