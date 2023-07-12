@@ -189,3 +189,12 @@ class AppointmentByDateView(ListAPIView):
             return Appointment.objects.filter(date__exact=search, instructor_id=instructor_id)
 
         return Appointment.objects.all()
+
+
+class StudentAppointmentsView(ListAPIView):
+    serializer_class = AppointmentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user.user
+        return Appointment.objects.filter(student=user, state='B')
