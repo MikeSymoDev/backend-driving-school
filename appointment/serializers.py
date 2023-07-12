@@ -27,13 +27,21 @@ class AppointmentSerializer(serializers.ModelSerializer):
             'email': instructor.email,
             'first_name': instructor.user.first_name,
             'last_name': instructor.user.last_name,
-            'driving_school': instructor.driving_school
+            'driving_school': {
+                'companyName': instructor.driving_school.companyName,
+                'address': instructor.driving_school.address,
+                'postal_code': instructor.driving_school.postal_code,
+                'location_city': instructor.driving_school.location_city,
+                'country': instructor.driving_school.country
+        }
         }
 
     def get_student(self, instance):
         student = instance.student
+        if student is None:
+            return None
         return {
-            'email': student.email,
+            'email': student.user.email,
             'first_name': student.user.first_name,
             'last_name': student.user.last_name,
         }
