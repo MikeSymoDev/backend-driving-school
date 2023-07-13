@@ -1,3 +1,5 @@
+from django.shortcuts import render
+from django.views import View
 from rest_framework import status
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -7,6 +9,8 @@ from user.models import User
 from userProfile.models import UserProfile
 from userProfile.serializers import UserProfileSerializer
 from vehicle.serializers import VehicleSerializer
+
+from math import sin, cos, sqrt, atan2, radians
 
 
 # Create your views here.
@@ -91,3 +95,19 @@ class InstructorDetailView(RetrieveAPIView):
         data['vehicles'] = vehicle_serializer.data
 
         return Response(data)
+
+
+class NearestInstructorsView(ListAPIView):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = []
+
+    def get_queryset(self):
+        search = self.request.query_params.get('search')
+
+
+        if search is not None:
+            # Filter appointments by date and instructor ID
+            return UserProfile.objects.filter(postal_code__icontains=search, type="I")
+
+        return UserProfile.objects.all()
