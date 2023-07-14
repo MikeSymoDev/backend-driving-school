@@ -5,6 +5,8 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView, GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from drivingSchool.models import DrivingSchool
+from drivingSchool.serializers import DrivingSchoolSerializer
 from user.models import User
 from userProfile.models import UserProfile
 from userProfile.serializers import UserProfileSerializer
@@ -41,9 +43,20 @@ class SetupUserProfileView(GenericAPIView):
         user_profile.about = request.data.get('about')
         user_profile.profile_image = request.data.get('profile_image')
         user_profile.instructor_license = request.data.get('instructor_license')
-        user_profile.driving_school = request.data.get('driving_school')
+        # user_profile.driving_school = request.data.get('driving_school')
         user_profile.has_learner_permit = request.data.get('has_learner_permit')
         user_profile.phone = request.data.get('phone')
+
+        driving_school_id = request.data.get('driving_school')
+        if driving_school_id:
+            driving_school = DrivingSchool.objects.filter(id=driving_school_id).first()
+            if driving_school:
+                user_profile.driving_school = driving_school
+            else:
+                return Response({'error': 'Invalid driving school ID'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            user_profile.driving_school = None
+
         user_profile.save()
 
         return Response(self.get_serializer(user_profile).data)
@@ -56,6 +69,40 @@ class RetrieveUpdateDeleteUserProfile(RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         return self.request.user.user
+
+    def update(self, request, *args, **kwargs):
+        user_profile = self.get_object()
+
+        # Retrieve the existing driving school value
+        driving_school = user_profile.driving_school
+
+        serializer = self.get_serializer(user_profile, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        # Update the fields other than driving_school
+        for attr, value in serializer.validated_data.items():
+            if attr != 'driving_school':
+                setattr(user_profile, attr, value)
+
+        # Update the driving_school if provided in the request data
+        driving_school_id = request.data.get('driving_school')
+        if driving_school_id:
+            driving_school = DrivingSchool.objects.get(id=driving_school_id)
+
+        # Set the updated driving_school value
+        user_profile.driving_school = driving_school
+
+        # Save the updated user_profile
+        user_profile.save()
+
+        # Set the driving school value back to the serialized data
+        serialized_data = serializer.data
+        serialized_data['driving_school'] = DrivingSchoolSerializer(driving_school).data
+
+        return Response(serialized_data)
+
+    def perform_update(self, serializer):
+        serializer.save()
 
     def destroy(self, request, *args, **kwargs):
         user_profile = self.get_object()
