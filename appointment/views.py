@@ -213,7 +213,7 @@ class CancelAppointmentView(APIView):
             if appointment.state == 'B':
                 appointment.state = 'O'  # Set the appointment state to 'Open'
                 appointment.save()
-                return Response(f"your Appointment with {appointment.instructor.email} is cancelled", status=status.HTTP_200_OK)
+                return Response(f"your Appointment (ID: {appointment.id}) with {appointment.instructor.email} is cancelled", status=status.HTTP_200_OK)
 
             return Response("Invalid appointment state.", status=status.HTTP_400_BAD_REQUEST)
 

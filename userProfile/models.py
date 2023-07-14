@@ -47,7 +47,7 @@ class UserProfile(models.Model):
     about = models.CharField(max_length=500, blank=True, null=True)
     profile_image = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
     instructor_license = models.CharField(max_length=100, blank=True, null=True)
-    driving_school = models.ForeignKey(to=DrivingSchool, on_delete=models.CASCADE, related_name="instructor_profile", blank=True, null=True)
+    driving_school = models.ForeignKey(to=DrivingSchool, on_delete=models.SET_NULL, related_name="instructor_profile", blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     has_learner_permit = models.BooleanField(default=False, blank=True, null=True)
