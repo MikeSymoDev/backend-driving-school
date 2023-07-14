@@ -179,3 +179,25 @@ class AppointmentByDateView(ListAPIView):
             return Appointment.objects.filter(date__exact=search)
 
         return Appointment.objects.all()
+
+
+class CancelAppointmentView(APIView):
+    def patch(self, request, pk):
+        try:
+            appointment = Appointment.objects.get(pk=pk)
+            student = appointment.student
+
+            # Check if the appointment belongs to the instructor
+            if student != request.user.user:
+                return Response("You are not authorized to perform this action.", status=status.HTTP_401_UNAUTHORIZED)
+
+            if appointment.state == 'B':
+                appointment.state = 'O'  # Set the appointment state to 'Open'
+                appointment.save()
+                return Response(f"your Appointment with {appointment.instructor.email} is cancelled ", status=status.HTTP_200_OK)
+
+
+            return Response("Invalid appointment state.", status=status.HTTP_400_BAD_REQUEST)
+
+        except Appointment.DoesNotExist:
+            return Response("Appointment not found.", status=status.HTTP_404_NOT_FOUND)
