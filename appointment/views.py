@@ -35,30 +35,33 @@ class AppointmentCreateAPIView(CreateAPIView):
         else:
             end_date = start_date + relativedelta(months=3)
 
-        # Create appointments until the end date, ignoring dates with existing appointments
+        # Create appointments until the end date, ignoring dates with existing appointments for the instructor
         current_date = start_date
         while current_date <= end_date:
             if current_date.weekday() != 6:  # Exclude Sundays
-                start_time = datetime.combine(current_date, time(hour=8, minute=0))
-                end_time = datetime.combine(current_date, time(hour=17, minute=0))
-                time_slot = start_time
+                # Check if the instructor already has an appointment on the current date
+                if not Appointment.objects.filter(instructor=instructor, date=current_date).exists():
+                    start_time = datetime.combine(current_date, time(hour=8, minute=0))
+                    end_time = datetime.combine(current_date, time(hour=17, minute=0))
+                    time_slot = start_time
 
-                while time_slot < end_time:
-                    start_datetime = make_aware(time_slot)  # Convert start_time to aware datetime
+                    while time_slot <= end_time:
+                        start_datetime = make_aware(time_slot)  # Convert start_time to aware datetime
 
-                    # Check if an appointment already exists for the current date and time slot
-                    if not Appointment.objects.filter(date=current_date, start_time=start_datetime).exists():
-                        # Create a new appointment instance
-                        appointment = Appointment(
-                            instructor=instructor,
-                            location=location,
-                            date=current_date,
-                            start_time=start_datetime
-                        )
-                        appointment.save()  # Save the appointment
+                        # Check if an appointment already exists for the current date and time slot
+                        if not Appointment.objects.filter(instructor=instructor, date=current_date,
+                                                          start_time=start_datetime).exists():
+                            # Create a new appointment instance
+                            appointment = Appointment(
+                                instructor=instructor,
+                                location=location,
+                                date=current_date,
+                                start_time=start_datetime
+                            )
+                            appointment.save()  # Save the appointment
 
-                    # Move to the next time slot
-                    time_slot += timedelta(hours=1)
+                        # Move to the next time slot
+                        time_slot += timedelta(hours=1)
 
             # Move to the next day
             current_date += timedelta(days=1)
@@ -84,11 +87,17 @@ class SetAppointmentsUnavailableAPIView(APIView):
 
         updated_count = 0
         not_updated_count = 0
+        booked_count = 0
+        not_available_count = 0
 
         # Update the appointments to 'NA' (Not Available) status
         for appointment in appointments:
             if appointment.state == 'B':
                 not_updated_count += 1
+                booked_count += 1
+            elif appointment.state == 'NA':
+                not_updated_count += 1
+                not_available_count += 1
             else:
                 appointment.state = 'NA'
                 appointment.save()
@@ -98,7 +107,8 @@ class SetAppointmentsUnavailableAPIView(APIView):
         response_msg = f"{updated_count} appointments were set to not available."
 
         if not_updated_count > 0:
-            response_msg += f" {not_updated_count} appointments could not be changed (status is booked)."
+            response_msg += f" {not_updated_count} appointments could not be changed ({booked_count} already booked " \
+                            f"and {not_available_count} already set to not available)."
 
         return Response({"message": response_msg}, status=status.HTTP_200_OK)
 
@@ -172,32 +182,19 @@ class AppointmentByDateView(ListAPIView):
 
     def get_queryset(self):
         search = self.request.query_params.get('search')
+        instructor_id = self.kwargs.get('instructor_id')  # Get the instructor ID from the URL
 
         if search is not None:
-            # lookup on the item side for a field name value
-            # return Order.objects.filter(items__name__icontains=search)
-            return Appointment.objects.filter(date__exact=search)
+            # Filter appointments by date and instructor ID
+            return Appointment.objects.filter(date__exact=search, instructor_id=instructor_id)
 
         return Appointment.objects.all()
 
 
-class CancelAppointmentView(APIView):
-    def patch(self, request, pk):
-        try:
-            appointment = Appointment.objects.get(pk=pk)
-            student = appointment.student
+class StudentAppointmentsView(ListAPIView):
+    serializer_class = AppointmentSerializer
+    permission_classes = [IsAuthenticated]
 
-            # Check if the appointment belongs to the instructor
-            if student != request.user.user:
-                return Response("You are not authorized to perform this action.", status=status.HTTP_401_UNAUTHORIZED)
-
-            if appointment.state == 'B':
-                appointment.state = 'O'  # Set the appointment state to 'Open'
-                appointment.save()
-                return Response(f"your Appointment with {appointment.instructor.email} is cancelled ", status=status.HTTP_200_OK)
-
-
-            return Response("Invalid appointment state.", status=status.HTTP_400_BAD_REQUEST)
-
-        except Appointment.DoesNotExist:
-            return Response("Appointment not found.", status=status.HTTP_404_NOT_FOUND)
+    def get_queryset(self):
+        user = self.request.user.user
+        return Appointment.objects.filter(student=user, state='B')
