@@ -14,7 +14,7 @@ from vehicle.serializers import VehicleSerializer
 class VehicleListCreateAPIView(ListCreateAPIView):
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     def perform_create(self, serializer):
         serializer.save(driving_instructor=self.request.user.user)
