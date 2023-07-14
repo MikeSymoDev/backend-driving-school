@@ -1,7 +1,8 @@
 from django.urls import path
 
 from appointment.views import AppointmentCreateAPIView, AppointmentRetrieveUpdateDeleteView, AppointmentByDateView, \
-    SetAppointmentsUnavailableAPIView, SetSingleAppointmentUnavailableView, StudentAppointmentsView
+    SetAppointmentsUnavailableAPIView, SetSingleAppointmentUnavailableView, StudentAppointmentsView, \
+    CancelAppointmentView
 
 urlpatterns = [
     path('', AppointmentCreateAPIView.as_view(), name='booking-list'),
@@ -9,5 +10,6 @@ urlpatterns = [
     path('not-available/<int:pk>', SetSingleAppointmentUnavailableView.as_view(), name='not-available-single'),
     path('<int:pk>', AppointmentRetrieveUpdateDeleteView.as_view(), name='booking-detail'),
     path('by-date/<int:instructor_id>/', AppointmentByDateView.as_view()),
-    path('mybookings/', StudentAppointmentsView.as_view())
+    path('mybookings/', StudentAppointmentsView.as_view()),
+    path('cancellation/<int:pk>', CancelAppointmentView.as_view(), name='cancel-booking')
 ]
