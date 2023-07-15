@@ -37,7 +37,7 @@ ALLOWED_HOSTS = ['backend-driving-school-99d5f092ee9a.herokuapp.com']
 if SERVER_TYPE !='production':
     ALLOWED_HOSTS += ['127.0.0.1']
 
-CORS_ALLOWED_ORIGINS = ['https://fe-driving-school-83b8d520b244.herokuapp.com']
+CORS_ALLOWED_ORIGINS = ['https://fe-driving-school-83b8d520b244.herokuapp.com', 'http://localhost:3000']
 
 if SERVER_TYPE != 'production':
     CORS_ALLOWED_ORIGINS += ['http://localhost:3000']
