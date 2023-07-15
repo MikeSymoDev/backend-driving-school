@@ -39,9 +39,9 @@ from project import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/token/verify/', jwt_views.TokenVerifyView.as_view(), name='token_refresh'),
+    path('backend/api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('backend/api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('backend/api/token/verify/', jwt_views.TokenVerifyView.as_view(), name='token_refresh'),
     # path('api/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 
     path('backend/api/signup/', include('user.urls')),
