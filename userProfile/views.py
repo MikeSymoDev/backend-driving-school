@@ -137,9 +137,9 @@ class InstructorDetailView(RetrieveAPIView):
         data = serializer.data
 
         # Retrieve the associated vehicles
-        vehicles = instance.vehicle.all()
-        vehicle_serializer = VehicleSerializer(vehicles, many=True)
-        data['vehicles'] = vehicle_serializer.data
+        # vehicles = instance.vehicle.all()
+        # vehicle_serializer = VehicleSerializer(vehicles, many=True)
+        # data['vehicles'] = vehicle_serializer.data
 
         return Response(data)
 

@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from user.serializers import UserSerializer
 from userProfile.models import UserProfile
+from vehicle.serializers import VehicleSerializer
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -24,8 +25,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
                 }
         return None
 
+    def get_vehicles(self, instance):
+        if instance.type == 'I':
+            vehicles = instance.vehicle.all()
+            vehicle_serializer = VehicleSerializer(vehicles, many=True)
+            return vehicle_serializer.data
+        return []
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation["user"] = UserSerializer(instance.user, many=False).data
         representation["driving_school"] = self.get_driving_school(instance)
+        representation["vehicles"] = self.get_vehicles(instance)
         return representation
