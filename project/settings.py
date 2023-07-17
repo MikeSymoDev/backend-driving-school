@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'availableTime',
     'class_package',
     'drivingSchool',
+    # 'custom_jwt_token',
 
 
 
