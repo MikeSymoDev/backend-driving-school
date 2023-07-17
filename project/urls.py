@@ -24,9 +24,9 @@ from project import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/token/', CustomTokenObtainPairView.as_view(), name='custom-token_obtain_pair'),
-    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/token/verify/', jwt_views.TokenVerifyView.as_view(), name='token_refresh'),
+    path('backend/api/token/', CustomTokenObtainPairView.as_view(), name='custom-token_obtain_pair'),
+    path('backend/api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('backend/api/token/verify/', jwt_views.TokenVerifyView.as_view(), name='token_refresh'),
 
     path('backend/api/signup/', include('user.urls')),
     path('backend/api/user/', include('userProfile.urls')),
