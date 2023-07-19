@@ -219,3 +219,11 @@ class CancelAppointmentView(APIView):
 
         except Appointment.DoesNotExist:
             return Response("Appointment not found.", status=status.HTTP_404_NOT_FOUND)
+
+class InstructorAppointmentsView(ListAPIView):
+    serializer_class = AppointmentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        instructor = self.request.user.user
+        return Appointment.objects.filter(instructor=instructor)
