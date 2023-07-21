@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 from rest_framework import permissions, status
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
 
@@ -41,3 +41,11 @@ class VehicleRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
         self.perform_destroy(instance)
         return Response({"message": "Vehicle deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
+
+class MyVehiclesListView(ListAPIView):
+    serializer_class = VehicleSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user.user
+        return Vehicle.objects.filter(driving_instructor=user)
